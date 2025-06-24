@@ -1,8 +1,12 @@
-// BACKEND - index.js
+// index.js
 
-const express = require("express");
-const cors = require("cors");
-const OpenAI = require("openai");
+import express from "express";
+import cors from "cors";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+
+// Load .env file
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,10 +15,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Initialize OpenAI (DeepSeek)
+// Initialize OpenAI
 const openai = new OpenAI({
-  baseURL: "https://api.deepseek.com",
-  apiKey: "sk-3fa8104325a649f8ab7dc7269ab5ab95",
+  baseURL: "https://models.github.ai/inference",
+  apiKey: process.env.GITHUB_TOKEN,
 });
 
 // In-memory conversation history
@@ -36,7 +40,7 @@ app.post("/chat", async (req, res) => {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "deepseek-chat",
+      model: "openai/gpt-4o",
       messages: conversationHistory,
     });
 
